@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"net/http"
 	"orchestra-service/proto"
 
@@ -20,26 +19,42 @@ func (server *Server) QuickReserve(ctx *gin.Context) {
 	// Check if request has all required fields in json body.
 	var req quickReserveRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		log.Println("Sem tu 1")
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
 		ctx.Abort()
 		return
 	}
 
-	myLocation := proto.Location{
+	origin := proto.Location{
 		Id:  req.ID,
 		Lat: req.Lat,
 		Lng: req.Lng,
 	}
 
+	destinations := []*proto.Location{
+		{ // Supernova
+			Id:  1,
+			Lat: 46.0364004,
+			Lng: 14.5252039,
+		},
+		{ // Zdravstveni dom Vič
+			Id:  2,
+			Lat: 46.0463459,
+			Lng: 14.4818508,
+		},
+		{ // Logatec
+			Id:  3,
+			Lat: 45.918809,
+			Lng: 14.2161334,
+		},
+	}
+
 	locationRequest := proto.LocationRequest{
-		MyLocation: &myLocation,
-		Locations:  []*proto.Location{},
+		Origin:       &origin,
+		Destinations: destinations,
 	}
 
 	closest, err := server.grpcClient.FindClosest(context.Background(), &locationRequest)
 	if err != nil {
-		log.Println("Sem tu 2")
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
 		ctx.Abort()
 		return

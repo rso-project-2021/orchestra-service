@@ -1,10 +1,10 @@
 syntax = "proto3";
-package pb;
-option go_package = "./pb";
+package proto;
+option go_package = "./proto";
 
 message LocationRequest {
-  Location myLocation = 1;
-  repeated Location locations = 2;
+  Location origin = 1;
+  repeated Location destinations = 2;
 }
   
 message Location {
