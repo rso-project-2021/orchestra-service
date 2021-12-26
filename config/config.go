@@ -5,10 +5,11 @@ import (
 )
 
 type Config struct {
-	StationsAddress string `mapstructure:"stations_address"`
-	GrpcAddress     string `mapstructure:"grpc_address"`
-	ServerAddress   string `mapstructure:"server_address"`
-	GinMode         string `mapstructure:"gin_mode"`
+	ReservationsAddress string `mapstructure:"reservation_address"`
+	StationsAddress     string `mapstructure:"stations_address"`
+	GrpcAddress         string `mapstructure:"grpc_address"`
+	ServerAddress       string `mapstructure:"server_address"`
+	GinMode             string `mapstructure:"gin_mode"`
 }
 
 // Reads configuration from file or environment variables.

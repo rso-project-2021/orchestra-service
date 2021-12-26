@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"orchestra-service/proto"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/common/log"
@@ -31,6 +32,13 @@ type LocationList struct {
 
 type GraphResponse struct {
 	Data LocationList `json:"data" binding:"required"`
+}
+
+type createReservationRequest struct {
+	StationID int64     `json:"station_id"`
+	UserID    int64     `json:"user_id"`
+	Start     time.Time `json:"start"`
+	End       time.Time `json:"end"`
 }
 
 func (server *Server) QuickReserve(ctx *gin.Context) {
@@ -79,6 +87,12 @@ func (server *Server) QuickReserve(ctx *gin.Context) {
 		return
 	}
 
+	if len(res.Data.List) == 0 {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": ""})
+		ctx.Abort()
+		return
+	}
+
 	// Parse destinations into a slice.
 	var destinations []*proto.Location
 	for _, loc := range res.Data.List {
@@ -105,13 +119,43 @@ func (server *Server) QuickReserve(ctx *gin.Context) {
 	if err != nil {
 		log.Warn("Google Maps service is not responding.")
 		closest = QuickReserveFallback(&locationRequest)
-		ctx.JSON(http.StatusOK, closest)
+	}
+
+	reservation := createReservationRequest{
+		StationID: closest.Id,
+		UserID:    origin.Id,
+		Start:     time.Now(),
+		End:       time.Now().Add(time.Minute * 60),
+	}
+
+	// Convert reservation to json.
+	jsonData, err := json.Marshal(reservation)
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
 
-	ctx.JSON(http.StatusOK, closest)
+	// Make a new reservation.
+	url = fmt.Sprintf("%s/v1/reservations", server.config.ReservationsAddress)
+	resp, err = http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err})
+		ctx.Abort()
+		return
+	}
+	defer resp.Body.Close()
+
+	ctx.JSON(http.StatusCreated, reservation)
 }
 
 func QuickReserveFallback(req *proto.LocationRequest) *proto.Location {
-	return req.Destinations[0]
+	if len(req.Destinations) > 0 {
+		return req.Destinations[0]
+	} else {
+		return &proto.Location{
+			Id:  0,
+			Lat: 0.0,
+			Lng: 0.0,
+		}
+	}
 }
