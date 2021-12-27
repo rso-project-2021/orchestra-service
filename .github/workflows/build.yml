@@ -25,6 +25,6 @@ jobs:
         touch config.json
         echo '{"reservation_address":"localhost:8083","stations_address":"localhost:8082","grpc_address":"localhost:9000","server_address":"0.0.0.0:8080","gin_mode":"debug"}' >> config.json
         cat config.json
-    
+
     - name: Test
       run: make test
