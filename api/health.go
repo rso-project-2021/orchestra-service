@@ -14,7 +14,7 @@ func (server *Server) Live(ctx *gin.Context) {
 func (server *Server) Ready(ctx *gin.Context) {
 
 	// Check connection to station service.
-	url := fmt.Sprintf("%s/health/ready", server.config.StationsAddress)
+	url := fmt.Sprintf("http://%s/health/ready", server.config.StationsAddress)
 	resp, err := http.Get(url)
 	if err != nil || resp.StatusCode != http.StatusOK {
 		ctx.JSON(http.StatusServiceUnavailable, gin.H{"status": "DOWN"})
@@ -24,7 +24,7 @@ func (server *Server) Ready(ctx *gin.Context) {
 	defer resp.Body.Close()
 
 	// Check connection to reservation service.
-	url = fmt.Sprintf("%s/health/ready", server.config.ReservationsAddress)
+	url = fmt.Sprintf("http://%s/health/ready", server.config.ReservationsAddress)
 	resp, err = http.Get(url)
 	if err != nil || resp.StatusCode != http.StatusOK {
 		ctx.JSON(http.StatusServiceUnavailable, gin.H{"status": "DOWN"})

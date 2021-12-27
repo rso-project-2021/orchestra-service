@@ -5,7 +5,7 @@ metadata:
   labels:
     app: orchestra-service
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: orchestra-service
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: orchestra-service
-        image: 092356264921.dkr.ecr.eu-central-1.amazonaws.com/orchestra-service:d651327269de64c26c013b6487dfa2aaf88b418f
+        image: 092356264921.dkr.ecr.eu-central-1.amazonaws.com/orchestra-service:f650266ae0262f98ccf5b0d30261a9c41b93450b
         ports:
         - containerPort: 8080
         livenessProbe:
