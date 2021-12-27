@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: orchestra-service
-        image: 092356264921.dkr.ecr.eu-central-1.amazonaws.com/orchestra-service:f650266ae0262f98ccf5b0d30261a9c41b93450b
+        image: 092356264921.dkr.ecr.eu-central-1.amazonaws.com/orchestra-service:77a13ece8d73f7e65ee0cb85481e543fceb78371
         ports:
         - containerPort: 8080
         livenessProbe:

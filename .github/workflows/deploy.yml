@@ -17,7 +17,7 @@ jobs:
     - name: Create config.json file
       run: |
         touch config.json
-        echo '{"reservation_address":"reservation-service-service.default.svc.cluster.local","stations_address": "station-service-service.default.svc.cluster.local","grpc_address": "gmaps-service-service.default.svc.cluster.local","server_address": "0.0.0.0:8080","gin_mode": "debug"}' >> config.json
+        echo '{"reservation_address":"reservation-service-service.default.svc.cluster.local","stations_address": "station-service-service.default.svc.cluster.local","grpc_address": "gmaps-service-service.default.svc.cluster.local:90","server_address": "0.0.0.0:8080","gin_mode": "debug"}' >> config.json
         cat config.json
 
     # Publish image to Docker Hub.
