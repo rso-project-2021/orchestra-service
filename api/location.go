@@ -64,7 +64,7 @@ func (server *Server) QuickReserve(ctx *gin.Context) {
         `,
 	})
 
-	url := fmt.Sprintf("%s/v1/graphql?lat=%f&lng=%f&offset=%d&limit=%d", server.config.StationsAddress, req.Lat, req.Lng, 0, 5)
+	url := fmt.Sprintf("http://%s/v1/graphql?lat=%f&lng=%f&offset=%d&limit=%d", server.config.StationsAddress, req.Lat, req.Lng, 0, 5)
 	resp, err := http.Post(url, "application/graphql", bytes.NewBuffer(graphQuery))
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err})
@@ -136,7 +136,7 @@ func (server *Server) QuickReserve(ctx *gin.Context) {
 	}
 
 	// Make a new reservation.
-	url = fmt.Sprintf("%s/v1/reservations", server.config.ReservationsAddress)
+	url = fmt.Sprintf("http://%s/v1/reservations", server.config.ReservationsAddress)
 	resp, err = http.Post(url, "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err})

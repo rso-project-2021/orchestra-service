@@ -1,0 +1,30 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+
+    - name: Create config.json file
+      run: |
+        touch config.json
+        echo '{"reservation_address": "localhost:8083","stations_address": "localhost:8082","grpc_address": "localhost:9000","server_address": "0.0.0.0:8080","gin_mode": "debug"}' >> config.json
+        cat config.json
+    
+    - name: Test
+      run: make test
