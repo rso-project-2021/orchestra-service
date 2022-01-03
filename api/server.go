@@ -27,7 +27,7 @@ func NewServer(config config.Config, grpcClient proto.LocationServiceClient) (*S
 	// Setup routing for server.
 	v1 := router.Group("v1")
 	{
-		v1.GET("/quickreserve", server.QuickReserve)
+		v1.POST("/quickreserve", server.QuickReserve)
 	}
 
 	// Setup health check routes.
